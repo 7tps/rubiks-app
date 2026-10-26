@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Case Scrambler</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>Case Scrambler</span>
+    </div>
+    <button class="scenario-chip" id="openSetup" type="button" title="Set up scenario (S)">
+      <span class="chip-label">Scenario</span>
+      <span class="chip-value" id="scenarioSummary">—</span>
+      <span class="chip-edit">Edit</span>
+    </button>
+  </header>
+
+  <main class="layout">
+    <section class="card scramble-card" aria-live="polite">
+      <div class="card-head">
+        <h2>Scramble</h2>
+        <span class="muted small" id="scrambleMeta"></span>
+      </div>
+      <p class="hint" id="orientationHint"></p>
+      <div class="scramble" id="scrambleText"><span class="loading">Preparing solver…</span></div>
+      <div class="actions">
+        <button class="btn primary" id="nextBtn" type="button">Next scramble <kbd>Enter</kbd></button>
+        <button class="btn" id="revealBtn" type="button">Reveal case <kbd>R</kbd></button>
+        <button class="btn" id="previewBtn" type="button" aria-pressed="false">Preview <kbd>P</kbd></button>
+      </div>
+      <div class="preview" id="preview" hidden>
+        <div class="preview-net" id="previewNet"></div>
+        <p class="muted small" id="previewCaption"></p>
+      </div>
+    </section>
+
+    <section class="card timer-card" id="timerCard">
+      <div class="timer" id="timer" tabindex="0" role="timer" aria-label="Timer">0.00</div>
+      <p class="muted small center desktop-only">Hold <kbd>Space</kbd> (or press here), release to start, press again to stop</p>
+      <p class="muted small center touch-only">Touch and hold the time, release to start, tap to stop</p>
+    </section>
+
+    <section class="card case-card">
+      <div class="card-head">
+        <h2 id="caseHeading">Current case</h2>
+      </div>
+      <div class="case-body" id="caseBody">
+        <p class="muted">Hidden until you reveal it or finish the solve.</p>
+      </div>
+    </section>
+
+    <section class="card stats-card">
+      <div class="card-head">
+        <h2>Session</h2>
+        <button class="btn ghost small" id="clearTimes" type="button">Clear times</button>
+      </div>
+      <div id="stats"></div>
+    </section>
+  </main>
+
+  <dialog class="setup" id="setup" aria-labelledby="setupTitle">
+    <form method="dialog" class="setup-inner" id="setupForm">
+      <div class="setup-head">
+        <h2 id="setupTitle">Scenario setup</h2>
+        <button class="btn primary" value="done" type="submit">Done</button>
+      </div>
+
+      <div class="setup-scroll">
+        <fieldset class="block">
+          <legend>Algorithm set</legend>
+          <div class="segmented" id="setTabs" role="tablist"></div>
+        </fieldset>
+
+        <fieldset class="block">
+          <legend>What the scramble should leave you with</legend>
+          <div class="options" id="caseOptions"></div>
+        </fieldset>
+
+        <fieldset class="block">
+          <legend>Cube orientation</legend>
+          <div class="row-fields">
+            <label class="field">Top color while solving
+              <select id="topColor"></select>
+            </label>
+            <label class="field">Front color while solving
+              <select id="frontColor"></select>
+            </label>
+            <label class="field">Scramble while holding
+              <select id="scrambleFrame">
+                <option value="wca">White top, green front (WCA)</option>
+                <option value="solving">Solving orientation</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="block">
+          <legend>Practice</legend>
+          <div class="row-fields">
+            <label class="field">Case order
+              <select id="order">
+                <option value="random">Random</option>
+                <option value="deck">Each case once per round</option>
+              </select>
+            </label>
+            <label class="field">Case name
+              <select id="revealMode">
+                <option value="hidden">Hide until revealed (practice recognition)</option>
+                <option value="shown">Show with the scramble</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="block">
+          <legend>
+            Cases <span class="muted" id="selectedCount"></span>
+          </legend>
+          <div class="case-tools">
+            <div class="group-chips" id="groupChips"></div>
+            <div class="case-tools-right">
+              <button class="btn small" type="button" id="onlyGroup" hidden>Only this group</button>
+              <button class="btn small" type="button" id="selectAll">Select all</button>
+              <button class="btn small" type="button" id="selectNone">Select none</button>
+            </div>
+          </div>
+          <div class="custom-form" id="customForm" hidden>
+            <label class="field">Name
+              <input id="customName" type="text" placeholder="e.g. My Sune" autocomplete="off">
+            </label>
+            <label class="field grow">Algorithm (the moves you do to solve the case)
+              <input id="customAlg" type="text" placeholder="R U R' U R U2 R'" autocomplete="off" spellcheck="false">
+            </label>
+            <button class="btn primary" type="button" id="customAdd">Add</button>
+            <p class="error small" id="customError" role="alert"></p>
+          </div>
+          <div class="case-grid" id="caseGrid"></div>
+        </fieldset>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/vendor/cube.js"></script>
+  <script src="js/vendor/solve.js"></script>
+  <script src="js/notation.js"></script>
+  <script src="js/algs.js"></script>
+  <script src="js/scrambler.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
